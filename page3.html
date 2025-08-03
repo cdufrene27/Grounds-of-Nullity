@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marriage Nullity Evidence Evaluation Tool</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        
+        .subtitle {
+            color: #7f8c8d;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        
+        .progress-tracker {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        
+        .step {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            background: #ecf0f1;
+            margin: 0 5px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .step.active {
+            background: #3498db;
+            color: white;
+        }
+        
+        .step.completed {
+            background: #27ae60;
+            color: white;
+        }
+        
+        .evidence-section {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .evidence-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .add-evidence-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+        
+        .add-evidence-btn:hover {
+            background: #2980b9;
+        }
+        
+        .evidence-item {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            border: 1px solid #e9ecef;
+        }
+        
+        .evidence-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .field-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #555;
+        }
+        
+        input[type="text"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        
+        input[type="text"]:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        select {
+            cursor: pointer;
+        }
+        
+        .quality-indicator {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-left: 10px;
+        }
+        
+        .quality-high {
+            background: #27ae60;
+            color: white;
+        }
+        
+        .quality-medium {
+            background: #f39c12;
+            color: white;
+        }
+        
+        .quality-low {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .defects-list {
+            margin-top: 10px;
+            padding: 10px;
+            background: #fee;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .defects-list h4 {
+            margin-bottom: 5px;
+            color: #c0392b;
+        }
+        
+        .compensation-strategies {
+            margin-top: 15px;
+            padding: 15px;
+            background: #e8f5e9;
+            border-radius: 4px;
+        }
+        
+        .compensation-strategies h4 {
+            margin-bottom: 10px;
+            color: #27ae60;
+        }
+        
+        .analysis-section {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-top: 30px;
+        }
+        
+        .analysis-tabs {
+            display: flex;
+            border-bottom: 2px solid #ecf0f1;
+            margin-bottom: 20px;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .tab.active {
+            color: #3498db;
+            border-bottom-color: #3498db;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .convergence-chart {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 6px;
+        }
+        
+        .evidence-strength-bar {
+            height: 20px;
+            background: #ecf0f1;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        
+        .strength-fill {
+            height: 100%;
+            background: linear-gradient(to right, #e74c3c, #f39c12, #27ae60);
+            transition: width 0.5s;
+        }
+        
+        .brief-generator {
+            margin-top: 20px;
+            padding: 20px;
+            background: #e3f2fd;
+            border-radius: 6px;
+        }
+        
+        .generate-btn {
+            background: #2196f3;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            display: block;
+            margin: 20px auto;
+        }
+        
+        .generate-btn:hover {
+            background: #1976d2;
+        }
+        
+        .brief-output {
+            margin-top: 20px;
+            padding: 20px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            white-space: pre-wrap;
+            font-family: monospace;
+            font-size: 14px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .delete-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+            float: right;
+        }
+        
+        .delete-btn:hover {
+            background: #c0392b;
+        }
+        
+        @media (max-width: 768px) {
+            .evidence-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .progress-steps {
+                flex-direction: column;
+            }
+            
+            .step {
+                margin: 5px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Marriage Nullity Evidence Evaluation Tool</h1>
+        <p class="subtitle">Universal Evidence Matrix for Achieving Moral Certainty</p>
+        
+        <div class="progress-tracker">
+            <div class="progress-steps">
+                <div class="step active" onclick="showPhase(1)">Phase 1: Evidence Inventory</div>
+                <div class="step" onclick="showPhase(2)">Phase 2: Direct Proof</div>
+                <div class="step" onclick="showPhase(3)">Phase 3: Indirect Proof</div>
+                <div class="step" onclick="showPhase(4)">Phase 4: Moral Certainty</div>
+            </div>
+        </div>
+        
+        <div id="phase1" class="phase-content">
+            <div class="evidence-section">
+                <div class="evidence-header">
+                    <h2>Evidence Inventory</h2>
+                    <button class="add-evidence-btn" onclick="addEvidence()">+ Add Evidence</button>
+                </div>
+                
+                <div id="evidenceList"></div>
+            </div>
+            
+            <div class="analysis-section">
+                <h3>Gold Standard Analysis</h3>
+                <div class="analysis-tabs">
+                    <div class="tab active" onclick="showAnalysis('statements')">Party Statements</div>
+                    <div class="tab" onclick="showAnalysis('witnesses')">Witnesses</div>
+                    <div class="tab" onclick="showAnalysis('documents')">Documents</div>
+                    <div class="tab" onclick="showAnalysis('experts')">Expert Reports</div>
+                </div>
+                
+                <div id="statements-analysis" class="tab-content active">
+                    <h4>Gold Standard: Judicial confession (freely made, against interest)</h4>
+                    <p>Your Reality: Check what you have</p>
+                    <div class="compensation-strategies">
+                        <h4>Compensation Strategies:</h4>
+                        <ul>
+                            <li>Character witnesses (neutral parties preferred)</li>
+                            <li>Internal consistency checks</li>
+                            <li>Tempore non suspecto timing</li>
+                            <li>Circumstances that make declaration believable</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div id="witnesses-analysis" class="tab-content">
+                    <h4>Gold Standard: Two credible witnesses, no motive to lie, personal knowledge</h4>
+                    <p>Your Reality: Check your witness quality</p>
+                    <div class="compensation-strategies">
+                        <h4>Compensation Strategies:</h4>
+                        <ul>
+                            <li>Exceptional credibility for single witness</li>
+                            <li>Documentary support</li>
+                            <li>Converging testimony from multiple sources</li>
+                            <li>Corroborative vs. cumulative distinction</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div id="documents-analysis" class="tab-content">
+                    <h4>Gold Standard: Authentic public documents directly establishing facts</h4>
+                    <p>Your Reality: Check your document types</p>
+                    <div class="compensation-strategies">
+                        <h4>Compensation Strategies:</h4>
+                        <ul>
+                            <li>Multiple documents converging</li>
+                            <li>Strong authentication (notary/testimony)</li>
+                            <li>Against-interest content</li>
+                            <li>Proper authentication of copies</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div id="experts-analysis" class="tab-content">
+                    <h4>Gold Standard: Professional diagnosis with clear connection to marital consent</h4>
+                    <p>Your Reality: Check expert availability</p>
+                    <div class="compensation-strategies">
+                        <h4>Compensation Strategies:</h4>
+                        <ul>
+                            <li>Overwhelming lay witness consensus</li>
+                            <li>Clear behavioral patterns</li>
+                            <li>Documentary medical evidence</li>
+                            <li>Obvious conditions not requiring expertise</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="phase2" class="phase-content" style="display: none;">
+            <div class="analysis-section">
+                <h2>Direct Proof Evaluation</h2>
+                <div class="convergence-chart">
+                    <h3>Evidence Strength Assessment</h3>
+                    <div id="strengthAssessment"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="phase3" class="phase-content" style="display: none;">
+            <div class="analysis-section">
+                <h2>Indirect Proof (Indicia) Evaluation</h2>
+                <div class="convergence-chart">
+                    <h3>Five Criteria for Indicia</h3>
+                    <ol>
+                        <li><strong>Proven with Certainty:</strong> How well is each indicium established?</li>
+                        <li><strong>Grave:</strong> Does this fact seriously suggest the conclusion?</li>
+                        <li><strong>Multiple and Converging:</strong> Do several indicia point to same conclusion?</li>
+                        <li><strong>Univocal:</strong> Is your conclusion the only reasonable explanation?</li>
+                        <li><strong>Not Neutralized:</strong> Do counter-indicia create doubt?</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        
+        <div id="phase4" class="phase-content" style="display: none;">
+            <div class="analysis-section">
+                <h2>Moral Certainty Construction</h2>
+                <div class="brief-generator">
+                    <h3>Brief Generator</h3>
+                    <p>Based on your evidence evaluation, generate a structured brief outline:</p>
+                    <button class="generate-btn" onclick="generateBrief()">Generate Brief Outline</button>
+                    <div id="briefOutput" class="brief-output" style="display: none;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let evidenceItems = [];
+        let currentPhase = 1;
+        
+        function addEvidence() {
+            const id = Date.now();
+            const evidenceHtml = `
+                <div class="evidence-item" id="evidence-${id}">
+                    <button class="delete-btn" onclick="deleteEvidence(${id})">Delete</button>
+                    <div class="evidence-grid">
+                        <div class="field-group">
+                            <label>Evidence Item Name</label>
+                            <input type="text" id="name-${id}" placeholder="e.g., Party A Statement, Witness 1">
+                        </div>
+                        
+                        <div class="field-group">
+                            <label>Type</label>
+                            <select id="type-${id}" onchange="updateTypeSpecific(${id})">
+                                <option value="">Select Type</option>
+                                <option value="party-judicial">Party Statement - Judicial</option>
+                                <option value="party-extrajudicial">Party Statement - Extrajudicial</option>
+                                <option value="witness">Witness Testimony</option>
+                                <option value="document-public">Document - Public</option>
+                                <option value="document-private">Document - Private</option>
+                                <option value="expert">Expert Report</option>
+                            </select>
+                        </div>
+                        
+                        <div class="field-group">
+                            <label>Credibility Assessment</label>
+                            <select id="credibility-${id}" onchange="updateCredibility(${id})">
+                                <option value="">Select Level</option>
+                                <option value="high">High</option>
+                                <option value="medium">Medium</option>
+                                <option value="low">Low</option>
+                            </select>
+                            <span id="credibility-indicator-${id}" class="quality-indicator"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="evidence-grid">
+                        <div class="field-group">
+                            <label>Direct Proof Value</label>
+                            <textarea id="direct-${id}" placeholder="What this evidence directly establishes"></textarea>
+                        </div>
+                        
+                        <div class="field-group">
+                            <label>Indirect Proof Value</label>
+                            <textarea id="indirect-${id}" placeholder="What this evidence suggests or indicates"></textarea>
+                        </div>
+                        
+                        <div class="field-group">
+                            <label>Corroboration Available</label>
+                            <textarea id="corroboration-${id}" placeholder="Supporting evidence that strengthens this"></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="field-group">
+                        <label>Defects Present</label>
+                        <div id="defects-${id}">
+                            <label><input type="checkbox" value="hearsay" onchange="updateDefects(${id})"> Hearsay</label>
+                            <label><input type="checkbox" value="bias" onchange="updateDefects(${id})"> Bias/Interest</label>
+                            <label><input type="checkbox" value="single" onchange="updateDefects(${id})"> Single Witness</label>
+                            <label><input type="checkbox" value="inconsistent" onchange="updateDefects(${id})"> Inconsistencies</label>
+                            <label><input type="checkbox" value="authentication" onchange="updateDefects(${id})"> Authentication Issues</label>
+                            <label><input type="checkbox" value="missing" onchange="updateDefects(${id})"> Missing Elements</label>
+                        </div>
+                        <div id="defects-list-${id}"></div>
+                    </div>
+                    
+                    <div class="field-group">
+                        <label>Counter-Proof Potential</label>
+                        <textarea id="counter-${id}" placeholder="Does this contradict the case? How to address?"></textarea>
+                    </div>
+                    
+                    <div id="compensation-${id}" class="compensation-strategies" style="display: none;">
+                        <h4>Recommended Compensation Strategies</h4>
+                        <div id="compensation-text-${id}"></div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('evidenceList').insertAdjacentHTML('beforeend', evidenceHtml);
+            evidenceItems.push(id);
+        }
+        
+        function deleteEvidence(id) {
+            document.getElementById(`evidence-${id}`).remove();
+            evidenceItems = evidenceItems.filter(item => item !== id);
+        }
+        
+        function updateCredibility(id) {
+            const credibility = document.getElementById(`credibility-${id}`).value;
+            const indicator = document.getElementById(`credibility-indicator-${id}`);
+            
+            indicator.className = 'quality-indicator';
+            if (credibility === 'high') {
+                indicator.className += ' quality-high';
+                indicator.textContent = 'HIGH';
+            } else if (credibility === 'medium') {
+                indicator.className += ' quality-medium';
+                indicator.textContent = 'MEDIUM';
+            } else if (credibility === 'low') {
+                indicator.className += ' quality-low';
+                indicator.textContent = 'LOW';
+            } else {
+                indicator.textContent = '';
+            }
+        }
+        
+        function updateDefects(id) {
+            const checkboxes = document.querySelectorAll(`#defects-${id} input[type="checkbox"]:checked`);
+            const defectsList = document.getElementById(`defects-list-${id}`);
+            const compensationDiv = document.getElementById(`compensation-${id}`);
+            const compensationText = document.getElementById(`compensation-text-${id}`);
+            
+            if (checkboxes.length > 0) {
+                const defects = Array.from(checkboxes).map(cb => cb.value);
+                defectsList.className = 'defects-list';
+                defectsList.innerHTML = '<h4>Defects to Address:</h4>' + defects.join(', ');
+                
+                // Show compensation strategies
+                compensationDiv.style.display = 'block';
+                let strategies = '<ul>';
+                
+                if (defects.includes('hearsay')) {
+                    strategies += '<li>Multiple hearsay sources + circumstances creating "violent presumption"</li>';
+                }
+                if (defects.includes('bias')) {
+                    strategies += '<li>Multiple biased witnesses telling same story + objective corroboration</li>';
+                }
+                if (defects.includes('single')) {
+                    strategies += '<li>Exceptional credibility + strong circumstances + documentary support</li>';
+                }
+                if (defects.includes('inconsistent')) {
+                    strategies += '<li>Core agreement on essential facts + reasonable explanations for discrepancies</li>';
+                }
+                if (defects.includes('authentication')) {
+                    strategies += '<li>Official notary authentication or authentication by testimony</li>';
+                }
+                if (defects.includes('missing')) {
+                    strategies += '<li>Actions constitute implicit evidence + univocal circumstances</li>';
+                }
+                
+                strategies += '</ul>';
+                compensationText.innerHTML = strategies;
+            } else {
+                defectsList.innerHTML = '';
+                defectsList.className = '';
+                compensationDiv.style.display = 'none';
+            }
+        }
+        
+        function updateTypeSpecific(id) {
+            const type = document.getElementById(`type-${id}`).value;
+            const compensationDiv = document.getElementById(`compensation-${id}`);
+            const compensationText = document.getElementById(`compensation-text-${id}`);
+            
+            // Add type-specific guidance
+            if (type.includes('party')) {
+                if (type === 'party-extrajudicial') {
+                    compensationDiv.style.display = 'block';
+                    compensationText.innerHTML = '<p><strong>Extrajudicial statements need:</strong> Credible witnesses who heard it, tempore non suspecto timing, circumstances of statement, assessment of motive</p>';
+                }
+            }
+        }
+        
+        function showPhase(phase) {
+            currentPhase = phase;
+            
+            // Update steps
+            document.querySelectorAll('.step').forEach((step, index) => {
+                step.classList.remove('active', 'completed');
+                if (index < phase - 1) {
+                    step.classList.add('completed');
+                } else if (index === phase - 1) {
+                    step.classList.add('active');
+                }
+            });
+            
+            // Hide all phases
+            document.querySelectorAll('.phase-content').forEach(content => {
+                content.style.display = 'none';
+            });
+            
+            // Show current phase
+            document.getElementById(`phase${phase}`).style.display = 'block';
+            
+            // Update phase-specific content
+            if (phase === 2) {
+                updateStrengthAssessment();
+            }
+        }
+        
+        function showAnalysis(type) {
+            // Update tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Update content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.style.display = 'none';
+            });
+            document.getElementById(`${type}-analysis`).style.display = 'block';
+        }
+        
+        function updateStrengthAssessment() {
+            const assessment = document.getElementById('strengthAssessment');
+            let html = '';
+            
+            evidenceItems.forEach(id => {
+                const name = document.getElementById(`name-${id}`).value || 'Unnamed Evidence';
+                const credibility = document.getElementById(`credibility-${id}`).value;
+                const type = document.getElementById(`type-${id}`).value;
+                
+                let strength = 0;
+                if (credibility === 'high') strength = 80;
+                else if (credibility === 'medium') strength = 50;
+                else if (credibility === 'low') strength = 20;
+                
+                // Adjust for type
+                if (type === 'party-judicial') strength += 20;
+                else if (type === 'document-public') strength += 15;
+                else if (type === 'expert') strength += 15;
+                
+                // Cap at 100
+                strength = Math.min(strength, 100);
+                
+                html += `
+                    <div>
+                        <h4>${name}</h4>
+                        <div class="evidence-strength-bar">
+                            <div class="strength-fill" style="width: ${strength}%"></div>
+                        </div>
+                        <p>Strength: ${strength}%</p>
+                    </div>
+                `;
+            });
+            
+            assessment.innerHTML = html || '<p>No evidence added yet.</p>';
+        }
+        
+        function generateBrief() {
+            let brief = "MARRIAGE NULLITY BRIEF OUTLINE\n";
+            brief += "================================\n\n";
+            
+            brief += "I. BASIC FACTS\n";
+            brief += "[To be filled with case-specific facts]\n\n";
+            
+            brief += "II. REASONS IN LAW\n";
+            brief += "[Ground of nullity and relevant canons]\n\n";
+            
+            brief += "III. REASONS IN FACT\n";
+            brief += "(Organized by Schema of Proofs)\n\n";
+            
+            // Collect evidence by type
+            const partyStatements = [];
+            const witnesses = [];
+            const documents = [];
+            const experts = [];
+            
+            evidenceItems.forEach(id => {
+                const name = document.getElementById(`name-${id}`).value || 'Unnamed';
+                const type = document.getElementById(`type-${id}`).value;
+                const direct = document.getElementById(`direct-${id}`).value;
+                const indirect = document.getElementById(`indirect-${id}`).value;
+                const credibility = document.getElementById(`credibility-${id}`).value;
+                const corroboration = document.getElementById(`corroboration-${id}`).value;
+                const counter = document.getElementById(`counter-${id}`).value;
+                
+                const evidence = {
+                    name, type, direct, indirect, credibility, corroboration, counter
+                };
+                
+                if (type.includes('party')) partyStatements.push(evidence);
+                else if (type === 'witness') witnesses.push(evidence);
+                else if (type.includes('document')) documents.push(evidence);
+                else if (type === 'expert') experts.push(evidence);
+            });
+            
+            // Party Statements
+            if (partyStatements.length > 0) {
+                brief += "A. Statements of the Parties\n";
+                partyStatements.forEach(stmt => {
+                    brief += `\n${stmt.name} (${stmt.credibility} credibility):\n`;
+                    brief += `- Direct proof: ${stmt.direct}\n`;
+                    brief += `- Indirect proof: ${stmt.indirect}\n`;
+                    if (stmt.corroboration) brief += `- Corroboration: ${stmt.corroboration}\n`;
+                    if (stmt.counter) brief += `- Counter-proof consideration: ${stmt.counter}\n`;
+                });
+                brief += "\n";
+            }
+            
+            // Witnesses
+            if (witnesses.length > 0) {
+                brief += "B. Witness Testimony\n";
+                witnesses.forEach(witness => {
+                    brief += `\n${witness.name} (${witness.credibility} credibility):\n`;
+                    brief += `- Direct proof: ${witness.direct}\n`;
+                    brief += `- Indirect proof: ${witness.indirect}\n`;
+                    if (witness.corroboration) brief += `- Corroboration: ${witness.corroboration}\n`;
+                });
+                brief += "\n";
+            }
+            
+            // Documents
+            if (documents.length > 0) {
+                brief += "C. Documentary Evidence\n";
+                documents.forEach(doc => {
+                    brief += `\n${doc.name}:\n`;
+                    brief += `- Direct proof: ${doc.direct}\n`;
+                    brief += `- Indirect proof: ${doc.indirect}\n`;
+                });
+                brief += "\n";
+            }
+            
+            // Experts
+            if (experts.length > 0) {
+                brief += "D. Expert Evidence\n";
+                experts.forEach(expert => {
+                    brief += `\n${expert.name}:\n`;
+                    brief += `- Direct proof: ${expert.direct}\n`;
+                    brief += `- Connection to consent: ${expert.indirect}\n`;
+                });
+                brief += "\n";
+            }
+            
+            brief += "IV. CONVERGENCE ARGUMENT\n";
+            brief += "[Show how different evidence types support same conclusion]\n\n";
+            
+            brief += "V. ADDRESSING DEFICIENCIES\n";
+            brief += "[Acknowledge and overcome weaknesses using compensation language]\n\n";
+            
+            brief += "VI. MORAL CERTAINTY CONCLUSION\n";
+            brief += "1. What is established: [List key proven facts]\n";
+            brief += "2. Convergence: [Show how sources align]\n";
+            brief += "3. Alternative explanations eliminated: [Address other possibilities]\n";
+            brief += "4. Counter-proofs addressed: [Handle contrary evidence]\n\n";
+            
+            brief += "Respectfully submitted,\n";
+            brief += "[Advocate Name]\n";
+            brief += "[Date]\n";
+            
+            document.getElementById('briefOutput').textContent = brief;
+            document.getElementById('briefOutput').style.display = 'block';
+        }
+        
+        // Initialize with one evidence item
+        addEvidence();
+    </script>
+</body>
+</html>
