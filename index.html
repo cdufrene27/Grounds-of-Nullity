@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nullity Resources</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 60px 40px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            width: 100%;
+            transform: translateY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .container:hover {
+            transform: translateY(-5px);
+        }
+
+        h1 {
+            color: #2c3e50;
+            font-size: 2.8rem;
+            margin-bottom: 20px;
+            font-weight: 300;
+            letter-spacing: -1px;
+        }
+
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 1.2rem;
+            margin-bottom: 50px;
+            font-weight: 400;
+        }
+
+        .navigation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .nav-card {
+            background: linear-gradient(145deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            padding: 40px 30px;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .nav-card:hover::before {
+            left: 100%;
+        }
+
+        .nav-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: #667eea;
+            box-shadow: 0 15px 30px rgba(102, 126, 234, 0.2);
+        }
+
+        .nav-card h2 {
+            font-size: 1.5rem;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .nav-card p {
+            color: #6c757d;
+            line-height: 1.6;
+            font-size: 1rem;
+        }
+
+        .nav-card.process {
+            background: linear-gradient(145deg, #e3f2fd, #bbdefb);
+        }
+
+        .nav-card.grounds {
+            background: linear-gradient(145deg, #f3e5f5, #ce93d8);
+        }
+
+        .nav-card.guide {
+            background: linear-gradient(145deg, #e8f5e8, #a5d6a7);
+        }
+
+        .footer {
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 1px solid #e9ecef;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 40px 20px;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .navigation-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .nav-card {
+                padding: 30px 20px;
+            }
+        }
+
+        /* Animated background elements */
+        .bg-decoration {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .bg-decoration::before,
+        .bg-decoration::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .bg-decoration::before {
+            width: 200px;
+            height: 200px;
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .bg-decoration::after {
+            width: 150px;
+            height: 150px;
+            bottom: 10%;
+            right: 10%;
+            animation-delay: 3s;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-decoration"></div>
+    
+    <div class="container">
+        <h1>Nullity Resources</h1>
+        <p class="subtitle">Your comprehensive guide to nullity procedures and documentation</p>
+        
+        <div class="navigation-grid">
+            <a href="page1.html" class="nav-card process">
+                <h2>Nullity Process</h2>
+                <p>Step-by-step guidance through the nullity process, including timelines, requirements, and procedural considerations.</p>
+            </a>
+            
+            <a href="page2.html" class="nav-card grounds">
+                <h2>Grounds of Nullity</h2>
+                <p>Comprehensive overview of the legal grounds for nullity, with explanations and relevant case law references.</p>
+            </a>
+            
+            <a href="page3.html" class="nav-card guide">
+                <h2>Brief Writing Guide</h2>
+                <p>Essential guidelines for drafting effective legal briefs, including structure, argumentation, and formatting standards.</p>
+            </a>
+        </div>
+        
+        <div class="footer">
+            <p>Navigate to any section above to access detailed resources and documentation.</p>
+        </div>
+    </div>
+</body>
+</html>
